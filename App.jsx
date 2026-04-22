@@ -2,7 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import BottomTabsNavigator from "./navigators/BottomTabsNavigator";
+import MainStackNavigator from "./navigators/MainStackNavigator";
 
 export default function App() {
   const [fontLoaded] = useFonts({
@@ -14,7 +14,7 @@ export default function App() {
   return fontLoaded ? (
     <SafeAreaProvider>
       <NavigationContainer>
-        <BottomTabsNavigator />
+        <MainStackNavigator />
       </NavigationContainer>
     </SafeAreaProvider>
   ) : null;

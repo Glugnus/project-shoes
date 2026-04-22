@@ -19,7 +19,7 @@ import Cart from "../screens/cart";
 import Favorites from "../screens/favorites";
 import Notifications from "../screens/notifications";
 import Profile from "../screens/profile";
-import StackNavigator from "./StackNavigator";
+import HomeStackNavigator from "./HomeStackNavigator";
 
 const Tabs = createBottomTabNavigator();
 
@@ -63,7 +63,7 @@ export default function BottomTabsNavigator() {
       }}
     >
       <Tabs.Screen
-        component={StackNavigator}
+        component={HomeStackNavigator}
         name="HomeStack"
         options={{
           headerShown: false,
