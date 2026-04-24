@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Pressable } from "react-native";
 import { colors } from "../constants/colors";
 import Details from "../screens/details";
-import BottomTabsNavigator from "./BottomTabsNavigator";
+import DrawerNavigator from "./DrawerNavigator";
 const Stack = createNativeStackNavigator();
 
 export default function MainStackNavigator() {
@@ -18,8 +18,8 @@ export default function MainStackNavigator() {
       })}
     >
       <Stack.Screen
-        component={BottomTabsNavigator}
-        name="BottomTabs"
+        component={DrawerNavigator}
+        name="Drawer"
         options={{
           headerShown: false,
         }}

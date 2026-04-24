@@ -22,7 +22,7 @@ export default function BrandList({ selectedBrand, setSelectedBrand }) {
       )}
       style={styles.listContainer}
       contentContainerStyle={styles.contentStyle}
-      ItemSeparatorComponent={<ItemSeparator width={spaces.S} />}
+      ItemSeparatorComponent={<ItemSeparator width={spaces.M} />}
     />
   );
 }

@@ -1,5 +1,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BottomTabsBackground from "../assets/images/navigation/bottomTabsBackground.svg";
 import CartIcon from "../assets/images/navigation/cart.svg";
@@ -20,6 +26,8 @@ import Favorites from "../screens/favorites";
 import Notifications from "../screens/notifications";
 import Profile from "../screens/profile";
 import HomeStackNavigator from "./HomeStackNavigator";
+import DrawerIcon from "../assets/images/navigation/drawer.svg";
+import { spaces } from "../constants/spaces";
 
 const Tabs = createBottomTabNavigator();
 
@@ -32,7 +40,8 @@ export default function BottomTabsNavigator() {
   const insets = useSafeAreaInsets();
   return (
     <Tabs.Navigator
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
+        unmountOnBlur: true,
         tabBarStyle: {
           height: originalHeight,
           backgroundColor: colors.LIGHT,
@@ -60,7 +69,16 @@ export default function BottomTabsNavigator() {
             />
           </View>
         ),
-      }}
+        headerTitleAlign: "center",
+        headerLeft: () => (
+          <Pressable
+            style={styles.drawerIconContainer}
+            onPress={() => navigation.getParent().openDrawer()}
+          >
+            <DrawerIcon />
+          </Pressable>
+        ),
+      })}
     >
       <Tabs.Screen
         component={HomeStackNavigator}
@@ -140,6 +158,9 @@ export default function BottomTabsNavigator() {
 }
 
 const styles = StyleSheet.create({
+  drawerIconContainer: {
+    marginLeft: spaces.L,
+  },
   cartContainer: {
     width: 60,
     height: 60,

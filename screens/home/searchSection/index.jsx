@@ -1,6 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import SearchInput from "../../../ui-components/input/SearchInput";
 import BrandList from "./components/BrandList";
+import { IS_LARGE_SCREEN } from "../../../constants/sizes";
 
 export default function SearchSection({
   inputValue,
@@ -28,6 +29,6 @@ const styles = StyleSheet.create({
     flex: 120,
     minHeight: 120,
     justifyContent: "space-evenly",
-    alignItems: "center",
+    alignItems: IS_LARGE_SCREEN ? "center" : "flex-start",
   },
 });
