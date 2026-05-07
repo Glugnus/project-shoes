@@ -4,7 +4,7 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import BottomTabsNavigator from "./BottomTabsNavigator";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { TextBoldXL } from "../ui-components/texts";
 import { spaces } from "../constants/spaces";
 import { radius } from "../constants/radius";
@@ -16,12 +16,13 @@ import ProfileIcon from "../assets/images/navigation/user.svg";
 import FavoriteIcon from "../assets/images/navigation/favorite.svg";
 import CartIcon from "../assets/images/navigation/cart.svg";
 import NotificationIcon from "../assets/images/navigation/notifications.svg";
+import { useSelector } from "react-redux";
 const Drawer = createDrawerNavigator();
 
 const routes = [
   { name: "HomeStack", label: "Acceuil", icon: HomeIcon, index: 0 },
   { name: "Favorites", label: "Favoris", icon: FavoriteIcon, index: 1 },
-  { name: "Cart", label: "Panier", icon: CartIcon, index: 2 },
+  { name: "MainCart", label: "Panier", icon: CartIcon, index: 2 },
   {
     name: "Notifications",
     label: "Notifications",
@@ -46,8 +47,29 @@ export default function DrawerNavigator() {
   );
 }
 
+const Label = ({ shoesInCartCount, label, activeIndex, index }) => {
+  return shoesInCartCount && label === "Panier" ? (
+    <View style={styles.cartView}>
+      <Text style={[styles.label, { color: colors.BLUE }]}>{label}</Text>
+      <View style={styles.activeCartContainer}>
+        <Text style={{ color: colors.WHITE }}>{shoesInCartCount}</Text>
+      </View>
+    </View>
+  ) : (
+    <Text
+      style={[
+        styles.label,
+        { color: activeIndex === index ? colors.WHITE : colors.GREY },
+      ]}
+    >
+      {label}
+    </Text>
+  );
+};
+
 function CustomDrawerContent(props) {
   const activeIndex = props.state.routes[0].state?.index || 0;
+  const shoesInCartCount = useSelector((state) => state.cart.shoes.length);
   return (
     <DrawerContentScrollView>
       <View style={styles.userInfosContainer}>
@@ -62,17 +84,34 @@ function CustomDrawerContent(props) {
       {routes.map((route) => (
         <DrawerItem
           key={route.name}
-          label={route.label}
+          label={() => (
+            <Label
+              label={route.label}
+              activeIndex={activeIndex}
+              index={route.index}
+              shoesInCartCount={shoesInCartCount}
+            />
+          )}
           icon={() => (
             <route.icon
               width={SMALL_ICON_SIZE}
               height={SMALL_ICON_SIZE}
-              color={activeIndex === route.index ? colors.WHITE : colors.GREY}
+              color={
+                shoesInCartCount && route.label === "Panier"
+                  ? colors.BLUE
+                  : activeIndex === route.index
+                    ? colors.WHITE
+                    : colors.GREY
+              }
             />
           )}
-          onPress={() =>
-            props.navigation.navigate("BottomTabs", { screen: route.name })
-          }
+          onPress={() => {
+            if (route.name === "MainCart") {
+              props.navigation.navigate(route.name);
+            } else {
+              props.navigation.navigate("BottomTabs", { screen: route.name });
+            }
+          }}
           labelStyle={[
             styles.label,
             { color: activeIndex === route.index ? colors.WHITE : colors.GREY },
@@ -119,5 +158,17 @@ const styles = StyleSheet.create({
     borderTopColor: colors.GREY,
     paddingTop: spaces.XL,
     marginTop: spaces.XL,
+  },
+  cartView: {
+    flexDirection: "row",
+  },
+  activeCartContainer: {
+    marginLeft: spaces.M,
+    width: SMALL_ICON_SIZE,
+    height: SMALL_ICON_SIZE,
+    backgroundColor: colors.BLUE,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: radius.FULL,
   },
 });

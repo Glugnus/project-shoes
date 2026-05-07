@@ -1,8 +1,13 @@
+if (__DEV__) {
+  require("./ReactotronConfig");
+}
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import MainStackNavigator from "./navigators/MainStackNavigator";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 export default function App() {
   const [fontLoaded] = useFonts({
@@ -12,11 +17,13 @@ export default function App() {
     SemiBold: require("./assets/fonts/Montserrat-SemiBold.ttf"),
   });
   return fontLoaded ? (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <MainStackNavigator />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <MainStackNavigator />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   ) : null;
 }
 
