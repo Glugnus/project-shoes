@@ -38,10 +38,11 @@ export default function NewsList({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: SCREEN_HEIGHT,
+    // height: SCREEN_HEIGHT,
+    flex: 1,
     backgroundColor: colors.LIGHT,
     paddingTop: spaces.L,
-    paddingBottom: 106,
+    // paddingBottom: 106,
   },
   contentStyle: {
     paddingBottom: spaces.XL,

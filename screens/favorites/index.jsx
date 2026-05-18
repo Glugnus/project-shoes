@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { colors } from "../../constants/colors";
 import { SCREEN_HEIGHT } from "../../constants/sizes";
 import { spaces } from "../../constants/spaces";
@@ -8,15 +8,19 @@ import VerticalCard from "../../ui-components/cards/VerticalCard";
 import ListItemSeparator from "../../ui-components/separators/ListItemSeparator";
 import { useSelector } from "react-redux";
 import { TextBoldL } from "../../ui-components/texts";
+import { useGetAllFavoritesQuery } from "../../store/api/favoritesApi";
 
 export default function Favorites({ navigation }) {
-  const favoritesShoesIds = useSelector(
-    (state) => state.favorites.favoritesShoesIds,
-  );
-  const data = favoritesShoesIds.map((id) =>
+  // const favoritesShoesIds = useSelector(
+  //   (state) => state.favorites.favoritesShoesIds,
+  // );
+
+  const { data: favoritesShoes, isLoading } = useGetAllFavoritesQuery();
+
+  const data = favoritesShoes?.shoesId?.map((id) =>
     shoes
       .find((item) => item.stock.find((elem) => elem.id === id))
-      .stock.find((el) => el.id),
+      .stock.find((el) => el.id === id),
   );
 
   const navigateToDetails = (id) => navigation.navigate("Details", { id });
@@ -32,7 +36,15 @@ export default function Favorites({ navigation }) {
     </View>
   );
 
-  if (favoritesShoesIds.length === 0) {
+  if (isLoading) {
+    return (
+      <View style={styles.emptyListContainer}>
+        <ActivityIndicator size="large" color={colors.DARK} />
+      </View>
+    );
+  }
+
+  if (favoritesShoes?.id) {
     return (
       <View style={styles.emptyListContainer}>
         <TextBoldL>Vous n'avez pas encore de favoris</TextBoldL>
@@ -62,10 +74,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.LIGHT,
   },
   container: {
-    height: SCREEN_HEIGHT,
+    // height: SCREEN_HEIGHT,
+    flex: 1,
     backgroundColor: colors.LIGHT,
     paddingTop: spaces.L,
-    paddingBottom: 106,
+    // paddingBottom: 106,
   },
   contentStyle: {
     paddingBottom: spaces.XL,

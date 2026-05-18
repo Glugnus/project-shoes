@@ -50,8 +50,7 @@ export default function BottomTabsNavigator() {
         tabBarStyle: {
           height: originalHeight,
           backgroundColor: colors.LIGHT,
-          marginBottom: insets.bottom / 2,
-          paddingTop: Platform.select({ ios: 50, android: 20 }),
+          paddingTop: insets.bottom + 20,
           elevation: 0,
           borderTopWidth: 0,
         },

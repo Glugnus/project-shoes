@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, View } from "react-native";
 import { colors } from "../../constants/colors";
 import { SCREEN_HEIGHT } from "../../constants/sizes";
 import { spaces } from "../../constants/spaces";
@@ -35,6 +35,7 @@ export default function List({ route, navigation }) {
         data={data.stock}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
         numColumns={2}
         ItemSeparatorComponent={<ListItemSeparator height={spaces.L} />}
         contentContainerStyle={styles.contentStyle}
@@ -45,16 +46,17 @@ export default function List({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: SCREEN_HEIGHT,
+    // height: SCREEN_HEIGHT,
+    flex: 1,
     backgroundColor: colors.LIGHT,
     paddingTop: spaces.L,
-    paddingBottom: 106,
+    // paddingBottom: 106,
   },
   contentStyle: {
     paddingBottom: spaces.XL,
   },
   cardContainer: {
-    flex: 1,
+    flex: 0.5,
     height: 240,
     justifyContent: "center",
     alignItems: "center",
