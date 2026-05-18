@@ -1,13 +1,22 @@
-import { FlatList, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { colors } from "../../constants/colors";
 import { spaces } from "../../constants/spaces";
 import { shoes } from "../../data/shoes";
 import ItemSeparator from "../../ui-components/separators/ListItemSeparator";
 import ListItem from "./components/ListItem";
+import {
+  useAddSeenNotificationsMutation,
+  useGetAllSeenNotificationsQuery,
+  useUpdateSeenNotificationsMutation,
+} from "../../store/api/notificationsApi";
 
 const ids = ["und43p", "reb08p", "adi203p"];
 
 export default function Notifications({ navigation }) {
+  const { data: seenNotifs, isLoading } = useGetAllSeenNotificationsQuery();
+  const [addSeenNotif] = useAddSeenNotificationsMutation();
+  const [updateSeenNotif] = useUpdateSeenNotificationsMutation();
+
   const data = ids.map((id) =>
     shoes
       .find((item) => item.stock.find((elem) => elem.id === id))
@@ -16,9 +25,34 @@ export default function Notifications({ navigation }) {
 
   const navigateToDetails = (id) => navigation.navigate("Details", { id });
 
+  const updateNotif = (id) => {
+    if (seenNotifs.id) {
+      updateSeenNotif({
+        id: seenNotifs.id,
+        notifsIds: [...seenNotifs.notifsIds, id],
+      });
+    } else {
+      addSeenNotif(id);
+    }
+  };
+
   const renderItem = ({ item }) => (
-    <ListItem item={item} navigateToDetails={navigateToDetails} />
+    <ListItem
+      item={item}
+      navigateToDetails={navigateToDetails}
+      isSeen={seenNotifs?.notifsIds?.includes(item.id)}
+      updateNotif={updateNotif}
+    />
   );
+
+  if (isLoading) {
+    return (
+      <View style={styles.emptyListContainer}>
+        <ActivityIndicator size="large" color={colors.DARK} />
+      </View>
+    );
+  }
+
   return (
     <FlatList
       style={styles.container}
@@ -35,5 +69,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.LIGHT,
     paddingTop: spaces.L,
+  },
+  emptyListContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.LIGHT,
   },
 });

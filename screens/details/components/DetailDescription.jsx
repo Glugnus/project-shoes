@@ -8,16 +8,9 @@ import {
 } from "../../../ui-components/texts";
 import { ICON_SIZE } from "../../../constants/sizes";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addFavorite,
-  removeFavorite,
-} from "../../../store/slices/favoritesSlice";
 import {
   useAddFavoriteMutation,
   useGetAllFavoritesQuery,
-  useRemoveFavoriteMutation,
-  useUpdateFavoriteMutation,
   useUpdateFavoritesMutation,
 } from "../../../store/api/favoritesApi";
 

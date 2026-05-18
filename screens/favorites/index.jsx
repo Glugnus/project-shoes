@@ -15,9 +15,9 @@ export default function Favorites({ navigation }) {
   //   (state) => state.favorites.favoritesShoesIds,
   // );
 
-  const { data: favoritesShoes, isLoading } = useGetAllFavoritesQuery();
+  const { data: favoriteShoes, isLoading } = useGetAllFavoritesQuery();
 
-  const data = favoritesShoes?.shoesId?.map((id) =>
+  const data = favoriteShoes?.shoesIds?.map((id) =>
     shoes
       .find((item) => item.stock.find((elem) => elem.id === id))
       .stock.find((el) => el.id === id),
@@ -44,7 +44,7 @@ export default function Favorites({ navigation }) {
     );
   }
 
-  if (favoritesShoes?.id) {
+  if (!favoriteShoes?.id) {
     return (
       <View style={styles.emptyListContainer}>
         <TextBoldL>Vous n'avez pas encore de favoris</TextBoldL>

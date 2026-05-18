@@ -12,17 +12,24 @@ import Touchable from "../../../ui-components/touchable/Touchable";
 import { useDispatch, useSelector } from "react-redux";
 import { addSeenNotification } from "../../../store/slices/notificationsSlice";
 
-export default function ListItem({ item, navigateToDetails }) {
-  const dispatch = useDispatch();
-  const seenNotificationsIds = useSelector(
-    (state) => state.notifications.seenNotificationsIds,
-  );
-  const isSeen = seenNotificationsIds.includes(item.id);
+export default function ListItem({
+  item,
+  navigateToDetails,
+  isSeen,
+  updateNotif,
+}) {
+  // const dispatch = useDispatch();
+  // const seenNotificationsIds = useSelector(
+  //   (state) => state.notifications.seenNotificationsIds,
+  // );
+
+  // const isSeen = seenNotificationsIds.includes(item.id);
 
   const navigate = () => {
     navigateToDetails(item.id);
     setTimeout(() => {
-      dispatch(addSeenNotification(item.id));
+      // dispatch(addSeenNotification(item.id));
+      updateNotif(item.id);
     }, 300);
   };
   return (
