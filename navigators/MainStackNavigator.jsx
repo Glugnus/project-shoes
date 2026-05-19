@@ -5,6 +5,7 @@ import { colors } from "../constants/colors";
 import Details from "../screens/details";
 import DrawerNavigator from "./DrawerNavigator";
 import Cart from "../screens/cart";
+import Signup from "../screens/auth/Signup";
 const Stack = createNativeStackNavigator();
 
 export default function MainStackNavigator() {
@@ -18,6 +19,11 @@ export default function MainStackNavigator() {
         headerTitleAlign: "center",
       })}
     >
+      <Stack.Screen
+        component={Signup}
+        name="Signup"
+        options={{ title: "Formulaire d'inscription" }}
+      />
       <Stack.Screen
         component={DrawerNavigator}
         name="Drawer"
