@@ -12,14 +12,23 @@ import {
   removeShoesToCart,
 } from "../../../store/slices/cartSlice";
 
-export default function ListItem({ item }) {
-  const dispatch = useDispatch();
+export default function ListItem({
+  item,
+  removeShoesFromCart,
+  updateQuantity,
+}) {
+  const decreaseShoesQuantity = () => {
+    if (item.quantity > 1) {
+      updateQuantity(item.id, false);
+    }
+  };
+  const increaseShoesQuantity = () => {
+    updateQuantity(item.id, true);
+  };
 
-  const decreaseShoesQuantity = () =>
-    dispatch(decreaseQuantity({ id: item.id }));
-  const increaseShoesQuantity = () =>
-    dispatch(increaseQuantity({ id: item.id }));
-  const removeShoes = () => dispatch(removeShoesToCart({ id: item.id }));
+  const removeShoes = () => {
+    removeShoesFromCart(item.id);
+  };
 
   return (
     <View style={styles.container}>

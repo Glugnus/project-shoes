@@ -13,40 +13,53 @@ import {
   useGetAllFavoritesQuery,
   useUpdateFavoritesMutation,
 } from "../../../store/api/favoritesApi";
+import { useSelector } from "react-redux";
+import {
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+} from "../../../store/api/userApi";
 
 export default function DetailDescription({ name, price, description, id }) {
   // const dispatch = useDispatch();
   // const favoritesShoesIds = useSelector(
   //   (state) => state.favorites.favoritesShoesIds,
   // );
-  // const isFavorite = favoritesShoesIds.includes(id);
 
-  const [addToFavorite] = useAddFavoriteMutation();
-  const [updateFavorites] = useUpdateFavoritesMutation();
-  const { data: favorite, favorites } = useGetAllFavoritesQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      data: data?.shoesIds?.find((elemId) => elemId === id),
-      favorites: data,
-    }),
-  });
+  // const [addToFavorite] = useAddFavoriteMutation();
+  // const [updateFavorites] = useUpdateFavoritesMutation();
+  // const { data: favorite, favorites } = useGetAllFavoritesQuery(undefined, {
+  //   selectFromResult: ({ data }) => ({
+  //     data: data?.shoesIds?.find((elemId) => elemId === id),
+  //     favorites: data,
+  //   }),
+  // });
 
-  const iconName = favorite ? "star" : "star-o";
+  const userId = useSelector((state) => state.user.id);
+  const { data: user } = useGetUserByIdQuery(userId);
+  const [updateUser] = useUpdateUserMutation();
+
+  const isFavorite = user?.favoritesIds?.includes(id);
+
+  const iconName = isFavorite ? "star" : "star-o";
 
   const toggleFavorite = () => {
-    if (favorite) {
+    if (isFavorite) {
       // dispatch(removeFavorite(id));
       // Retirer lélément des favoris
-      updateFavorites({
-        id: favorites.id,
-        shoesIds: favorites.shoesIds.filter((el) => el !== id),
+      updateUser({
+        id: userId,
+        favoritesIds: user.favoritesIds.filter((el) => el !== id),
       });
-    } else if (favorites?.id) {
-      updateFavorites({
-        id: favorites.id,
-        shoesIds: [...favorites.shoesIds, id],
+    } else if (user?.favoritesIds) {
+      updateUser({
+        id: userId,
+        favoritesIds: [...user.favoritesIds, id],
       });
     } else {
-      addToFavorite(id);
+      updateUser({
+        id: userId,
+        favoritesIds: [id],
+      });
       // dispatch(addFavorite(id));
     }
   };
