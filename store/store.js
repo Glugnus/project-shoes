@@ -8,6 +8,8 @@ import { notificationsApi } from "./api/notificationsApi";
 import { userApi } from "./api/userApi";
 import { useReducer } from "react";
 import userReducer from "./slices/userSlice";
+import { rtkQueryErrorMiddleware } from "./middlewares/errorMiddleware";
+import errorReducer from "./slices/errorSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +17,7 @@ export const store = configureStore({
     notifications: notificationsReducer,
     cart: cartReducer,
     user: userReducer,
+    error: errorReducer,
     [favoritesApi.reducerPath]: favoritesApi.reducer,
     [notificationsApi.reducerPath]: notificationsApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
@@ -23,7 +26,8 @@ export const store = configureStore({
     getDefaultMiddleware()
       .concat(favoritesApi.middleware)
       .concat(notificationsApi.middleware)
-      .concat(userApi.middleware),
+      .concat(userApi.middleware)
+      .concat(rtkQueryErrorMiddleware),
   enhancers: (getDefaultEnhancers) =>
     getDefaultEnhancers().concat(reactotron.createEnhancer()),
 });
