@@ -18,8 +18,8 @@ import {
 const ids = ["und43p", "reb08p", "adi203p"];
 
 export default function Notifications({ navigation }) {
-  const userId = useSelector((state) => state.user.id);
-  const { data: user, isLoading } = useGetUserByIdQuery(userId);
+  const { userId, token } = useSelector((state) => state.auth);
+  const { data: user, isLoading } = useGetUserByIdQuery({ userId, token });
   const [updateUser] = useUpdateUserMutation();
   // const { data: seenNotifs, isLoading } = useGetAllSeenNotificationsQuery();
   // const [addSeenNotif] = useAddSeenNotificationsMutation();
@@ -36,12 +36,14 @@ export default function Notifications({ navigation }) {
   const updateNotif = (id) => {
     if (user?.seenNotifsIds) {
       updateUser({
-        id: userId,
+        userId,
+        token,
         seenNotifsIds: [...user.seenNotifsIds, id],
       });
     } else {
       updateUser({
-        id: userId,
+        userId,
+        token,
         seenNotifsIds: [id],
       });
     }

@@ -14,12 +14,10 @@ import {
 } from "../../store/api/userApi";
 
 export default function Cart() {
-  const userId = useSelector((state) => state.user.id);
-  const { data: user, isLoading } = useGetUserByIdQuery(userId);
+  const { userId, token } = useSelector((state) => state.auth);
+  const { data: user } = useGetUserByIdQuery({ userId, token });
   const [updateUser] = useUpdateUserMutation();
   const totalAmount = user?.cart?.totalAmount;
-  // const state = useSelector((state) => state.cart);
-  // const { shoes, totalAmount } = state;
 
   const removeShoesFromCart = (id) => {
     const shoesToRemove = user.cart.shoes.find((el) => el.id === id);
@@ -29,7 +27,8 @@ export default function Cart() {
         user.cart.totalAmount - shoesToRemove.price * shoesToRemove.quantity,
     };
     updateUser({
-      id: userId,
+      userId,
+      token,
       cart: newCart,
     });
   };
@@ -47,7 +46,8 @@ export default function Cart() {
       newCart.totalAmount -= newCart.shoes[index].price;
     }
     updateUser({
-      id: userId,
+      userId,
+      token,
       cart: newCart,
     });
   };

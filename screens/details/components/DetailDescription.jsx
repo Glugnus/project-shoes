@@ -34,8 +34,8 @@ export default function DetailDescription({ name, price, description, id }) {
   //   }),
   // });
 
-  const userId = useSelector((state) => state.user.id);
-  const { data: user } = useGetUserByIdQuery(userId);
+  const { userId, token } = useSelector((state) => state.auth);
+  const { data: user } = useGetUserByIdQuery({ userId, token });
   const [updateUser] = useUpdateUserMutation();
 
   const isFavorite = user?.favoritesIds?.includes(id);
@@ -47,17 +47,20 @@ export default function DetailDescription({ name, price, description, id }) {
       // dispatch(removeFavorite(id));
       // Retirer lélément des favoris
       updateUser({
-        id: userId,
+        userId,
+        token,
         favoritesIds: user.favoritesIds.filter((el) => el !== id),
       });
     } else if (user?.favoritesIds) {
       updateUser({
-        id: userId,
+        userId,
+        token,
         favoritesIds: [...user.favoritesIds, id],
       });
     } else {
       updateUser({
-        id: userId,
+        userId,
+        token,
         favoritesIds: [id],
       });
       // dispatch(addFavorite(id));

@@ -1,10 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQueryWithReauth";
 
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.EXPO_PUBLIC_API_URL,
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getUser: builder.query({
       query: () => "users.json",
@@ -19,29 +18,35 @@ export const userApi = createApi({
       },
     }),
     getUserById: builder.query({
-      query: (id) => `users/${id}.json`,
+      query: ({ userId, token }) => ({
+        url: `users/${userId}.json?auth=${token}`,
+      }),
     }),
     createUser: builder.mutation({
-      query: (user) => ({
-        url: "users.json",
-        method: "POST",
+      query: ({ user, token, id }) => ({
+        url: `users/${id}.json?auth=${token}`,
+        method: "PUT",
         body: user,
       }),
-      transformResponse: (response) => {
-        return { id: response.name };
-      },
     }),
     updateUser: builder.mutation({
-      query: ({ id, ...patch }) => ({
-        url: `users/${id}.json`,
+      query: ({ userId, token, ...patch }) => ({
+        url: `users/${userId}.json?auth=${token}`,
         method: "PATCH",
         body: patch,
       }),
-      async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+      async onQueryStarted(
+        { userId, token, ...patch },
+        { dispatch, queryFulfilled },
+      ) {
         const patchResult = dispatch(
-          userApi.util.updateQueryData("getUserById", id, (draft) => {
-            Object.assign(draft, patch);
-          }),
+          userApi.util.updateQueryData(
+            "getUserById",
+            { userId, token },
+            (draft) => {
+              Object.assign(draft, patch);
+            },
+          ),
         );
         try {
           await queryFulfilled;
